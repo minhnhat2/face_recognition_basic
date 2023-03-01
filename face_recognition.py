@@ -1,5 +1,4 @@
 import face_recognition
-from recognition import FaceRecognition
 import os, sys
 import cv2
 import numpy as np
@@ -32,10 +31,14 @@ class FaceRecognition:
     def encode_faces(self):
         for image in os.listdir('faces'):
             face_image = face_recognition.load_image_file(f"faces/{image}")
-            face_encoding = face_recognition.face_encodings(face_image)[0]
-
-            self.known_face_encodings.append(face_encoding)
-            self.known_face_names.append(image)
+            face_encodings = face_recognition.face_encodings(face_image)
+        
+            if len(face_encodings) > 0:
+                face_encoding = face_encodings[0]
+                self.known_face_encodings.append(face_encoding)
+                self.known_face_names.append(image)
+            else:
+                print(f"No face found in {image}")
         print(self.known_face_names)
 
     def run_recognition(self):
